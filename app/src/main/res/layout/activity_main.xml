@@ -1,0 +1,244 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+        <variable
+            name="presenter"
+            type="com.xunce.xctestingtool.MainContract.Presenter"/>
+    </data>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/constraintLayout"
+        tools:context="com.xunce.xctestingtool.MainActivity">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:id="@+id/txt_IMEI"
+            android:text="IMEI:"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/gotoScanner"
+            app:layout_constraintBottom_toBottomOf="@+id/gotoScanner"
+            app:layout_constraintTop_toTopOf="@+id/gotoScanner"
+            android:layout_marginStart="20dp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gotoScanner"
+            android:text="二维码扫描"
+            android:onClick="@{() -> presenter.gotoScanner()}"
+            android:layout_marginRight="20dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="20dp" />
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="输入IMEI："
+            android:layout_marginLeft="20dp"
+            android:id="@+id/txt_input_imei"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_imei"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_imei"
+            />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_imei"
+            app:layout_constraintLeft_toRightOf="@+id/txt_input_imei"
+            app:layout_constraintRight_toLeftOf="@+id/btn_imei"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_imei"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_imei"
+            android:onClick="@{()->presenter.setIMEI(editImei.getText().toString())}"
+            android:text="设置"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gotoScanner"/>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="播放寻车声"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_play_alarm"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_play_alarm"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_play_alarm"
+            android:onClick="@{()->presenter.playAlarm()}"
+            android:text="播放"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_imei"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="电门开关"
+            android:id="@+id/txt_acc"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_open_acc"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_open_acc"
+       />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_close_acc"
+            android:text="关闭"
+            android:onClick="@{()->presenter.closeAcc()}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_play_alarm"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:text="开启"
+            android:id="@+id/btn_open_acc"
+            android:onClick="@{()->presenter.openAcc()}"
+            app:layout_constraintRight_toLeftOf="@+id/btn_close_acc"
+            app:layout_constraintTop_toBottomOf="@+id/btn_play_alarm"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="防御状态"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/txt_fence"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_open_fence"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_open_fence"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_close_fence"
+            android:text="关闭"
+            android:onClick="@{()->presenter.closeFence()}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close_acc"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_open_fence"
+            android:text="开启"
+            android:background="@color/colorAccent"
+            android:onClick="@{()->presenter.setFence()}"
+            app:layout_constraintRight_toLeftOf="@+id/btn_close_fence"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close_acc"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="后座锁"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/txt_backseat"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_open_backSeat"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_open_backSeat"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_open_backSeat"
+            android:text="开启"
+            android:background="@color/colorAccent"
+            android:onClick="@{()->presenter.openBackSeat()}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close_fence"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取状态"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_get_info"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_get_info"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/btn_get_info"
+            android:text="获取"
+            android:onClick="@{()->presenter.getAllInfo()}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_open_backSeat"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_vol"
+            android:text="电压：--"
+            android:background="@color/colorAccent"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_get_info"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_GSM"
+            android:text="GSM：--"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_vol"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关闭设备"
+            android:background="@color/colorAccent"
+            android:onClick="@{()->presenter.closeDevice()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="30dp"/>
+    </android.support.constraint.ConstraintLayout>
+
+
+</layout>
+
