@@ -1,6 +1,8 @@
 package com.xunce.xctestingtool;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +17,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class MainActivity extends AppCompatActivity implements  MainContract.View{
-
+    private static final int  Manguo = 1;
+    private static final int  Xiaomi = 2;
     private ActivityMainBinding mBinding;
     private MainContract.Presenter mPresenter;
 
@@ -31,6 +34,24 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
     }
 
 
+    private void showChooseDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("请选择质检产品");
+        builder.setTitle("产品选择");
+        builder.setPositiveButton("小蜜", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.setCheckType(Xiaomi);
+            }
+        });
+        builder.setNegativeButton("芒果", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.setCheckType(Manguo);
+            }
+        });
+        builder.create().show();
+    }
 
     @Override
     protected void onDestroy() {
@@ -43,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
         mPresenter = new MainPresenter(this);
         mBinding.setPresenter(mPresenter);
         mPresenter.subscribe();
+        mBinding.version.setText("version:"+BuildConfig.VERSION_NAME);
+        showChooseDialog();
     }
 
     public void setPresenter(MainContract.Presenter presenter){
@@ -75,6 +98,16 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
     }
 
     @Override
+    public void setBackWheel(final String text) {
+        mBinding.txtBackWheel.post(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.txtBackWheel.setText(text);
+            }
+        });
+    }
+
+    @Override
     public void setBackSeatText(final String text) {
         mBinding.txtBackseat.post(new Runnable() {
             @Override
@@ -100,6 +133,16 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
             @Override
             public void run() {
                 mBinding.txtGSM.setText(text);
+            }
+        });
+    }
+
+    @Override
+    public void setDeviceVersion(final String text) {
+        mBinding.txtVersion.post(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.txtVersion.setText(text);
             }
         });
     }

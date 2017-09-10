@@ -12,9 +12,11 @@ public interface MainContract {
         void setAccText(String text);
         void setFenceText(String text);
         void setBackSeatText(String text);
+        void setBackWheel(String text);
         void showToast(String text);
         void setVolText(String text);
         void setGSMText(String text);
+        void setDeviceVersion(String text);
     }
 
     interface Presenter{
@@ -27,9 +29,15 @@ public interface MainContract {
         void closeAcc();
         void setFence();
         void closeFence();
+        void openBackWheel();
+        void closeBackWheel();
         void openBackSeat();
         void getAllInfo();
         void closeDevice();
+        void checkSuccess();
+        void checkType();
+        void update();
+        void setCheckType(Integer type);
     }
 
 }

@@ -28,8 +28,8 @@
             app:layout_constraintTop_toTopOf="@+id/gotoScanner"
             android:layout_marginStart="20dp" />
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:id="@+id/gotoScanner"
             android:text="二维码扫描"
             android:onClick="@{() -> presenter.gotoScanner()}"
@@ -60,13 +60,13 @@
             app:layout_constraintRight_toLeftOf="@+id/btn_imei"
             app:layout_constraintBottom_toBottomOf="@+id/btn_imei"/>
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_imei"
             android:onClick="@{()->presenter.setIMEI(editImei.getText().toString())}"
-            android:text="设置"
+            android:text="查询"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gotoScanner"/>
 
@@ -83,10 +83,10 @@
             />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_play_alarm"
             android:onClick="@{()->presenter.playAlarm()}"
             android:text="播放"
@@ -106,10 +106,10 @@
        />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_close_acc"
             android:text="关闭"
             android:onClick="@{()->presenter.closeAcc()}"
@@ -118,15 +118,14 @@
 
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
             android:text="开启"
             android:id="@+id/btn_open_acc"
             android:onClick="@{()->presenter.openAcc()}"
             app:layout_constraintRight_toLeftOf="@+id/btn_close_acc"
-            app:layout_constraintTop_toBottomOf="@+id/btn_play_alarm"/>
+            app:layout_constraintBottom_toBottomOf="@+id/btn_close_acc" />
 
 
         <TextView
@@ -141,10 +140,10 @@
             />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_close_fence"
             android:text="关闭"
             android:onClick="@{()->presenter.closeFence()}"
@@ -152,16 +151,49 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_close_acc"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_open_fence"
             android:text="开启"
             android:background="@color/colorAccent"
             android:onClick="@{()->presenter.setFence()}"
             app:layout_constraintRight_toLeftOf="@+id/btn_close_fence"
             app:layout_constraintTop_toBottomOf="@+id/btn_close_acc"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="后轮锁"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/txt_backWheel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_close_backWheel"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_close_backWheel"
+            />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/btn_close_backWheel"
+            android:text="关闭"
+            android:onClick="@{()->presenter.closeBackWheel()}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close_fence"/>
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/btn_open_backWheel"
+            android:text="开启"
+            android:onClick="@{()->presenter.openBackWheel()}"
+            app:layout_constraintRight_toLeftOf="@+id/btn_close_backWheel"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close_fence"/>
 
 
         <TextView
@@ -176,16 +208,16 @@
             />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_open_backSeat"
             android:text="开启"
             android:background="@color/colorAccent"
             android:onClick="@{()->presenter.openBackSeat()}"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_close_fence"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_open_backWheel"/>
 
 
         <TextView
@@ -199,10 +231,10 @@
             />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_get_info"
             android:text="获取"
             android:onClick="@{()->presenter.getAllInfo()}"
@@ -226,10 +258,18 @@
             android:layout_marginLeft="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_vol"/>
-
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/txt_version"
+            android:text="deviceVersion：--"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_GSM"/>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:text="关闭设备"
             android:background="@color/colorAccent"
             android:onClick="@{()->presenter.closeDevice()}"
@@ -237,7 +277,37 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginBottom="30dp"/>
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/checkedOK"
+            android:text="升级"
+            android:onClick="@{() -> presenter.update()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="60dp"
+            />
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/checkedFail"
+            android:text="检测合格"
+            android:onClick="@{() -> presenter.checkSuccess()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="60dp"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="version"
+            android:id="@+id/version"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
     </android.support.constraint.ConstraintLayout>
+
 
 
 </layout>

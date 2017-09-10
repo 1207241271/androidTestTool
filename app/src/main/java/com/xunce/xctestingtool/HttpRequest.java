@@ -1,5 +1,7 @@
 package com.xunce.xctestingtool;
 
+import android.util.Log;
+
 import com.xunce.xctestingtool.utils.StreamToStringUtil;
 
 import org.json.JSONException;
@@ -48,6 +50,25 @@ public class HttpRequest {
         }).start();
     }
 
+    public static void httpGetWithUrl(final String urlString, String data, final HttpCallback callback){
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                HttpURLConnection connection;
+                try {
+                    URL getURL = new URL(urlString);
+                    connection = (HttpURLConnection) getURL.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    String result = StreamToStringUtil.StreamToString(connection.getInputStream());
+                    Log.e("http", result);
+                    callback.httpCallBack(result);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
 
     public static String getStringWithCmd(int cmd,String IMEI){
