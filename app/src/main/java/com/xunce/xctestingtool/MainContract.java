@@ -38,6 +38,7 @@ public interface MainContract {
         void checkType();
         void update();
         void setCheckType(Integer type);
+        void wirteCmd(String cmd);
     }
 
 }
