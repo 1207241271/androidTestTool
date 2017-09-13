@@ -3,8 +3,6 @@ package com.xunce.bluetoothgatt;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,7 +18,6 @@ import android.widget.Toast;
 import com.xunce.xctestingtool.R;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 /**
  * Created by xunce on 2017/9/11.
@@ -35,21 +32,18 @@ public class BluetoothHolder {
 
     private Context mContext;
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothGatt mBluetoothGatt;
     private BluetoothLeService mBluetoothLeService;
 
     private boolean mScanning;
     private Handler mHandler;
-    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
-            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
-    private boolean mConnected = false;
-    private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
     //byte[] WriteBytes = null;
     byte[] WriteBytes = new byte[20];
     private String mDeviceAddress;
+    private String mConnectBleName;
+    private boolean isDetectedBlueEnable = false;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -78,10 +72,30 @@ public class BluetoothHolder {
         }
         mContext = context;
         mHandler = new Handler();
+
+        if (mBluetoothAdapter == null) {
+            // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
+            // BluetoothAdapter through BluetoothManager.
+            final BluetoothManager bluetoothManager =
+                    (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+
+            if (mBluetoothAdapter == null) {
+                Toast.makeText(mContext, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                ((Activity) mContext).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+
+            isDetectedBlueEnable = true;
+        }
     }
 
     public void registerCallBack() {
-        if (mBluetoothAdapter != null) {
+        if (!isDetectedBlueEnable && mBluetoothAdapter != null) {
             if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 ((Activity) mContext).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -90,6 +104,8 @@ public class BluetoothHolder {
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
+        } else if (!TextUtils.isEmpty(mConnectBleName)) {
+            scanDeviceAndConnect(mConnectBleName, true);
         }
     }
 
@@ -102,6 +118,11 @@ public class BluetoothHolder {
         if (mContext == null) {
             throw new RuntimeException("must call init first!");
         }
+        if (TextUtils.isEmpty(imei) || imei.length() != 15) {
+            Toast.makeText(mContext, "无效的imei", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (mBluetoothAdapter == null) {
             // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
             // BluetoothAdapter through BluetoothManager.
@@ -109,15 +130,26 @@ public class BluetoothHolder {
                     (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
             mBluetoothAdapter = bluetoothManager.getAdapter();
 
-            if (!mBluetoothAdapter.isEnabled() && enable) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                ((Activity) mContext).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            if (mBluetoothAdapter == null) {
+                Toast.makeText(mContext, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+                return;
             }
         }
-        if (TextUtils.isEmpty(imei) || imei.length() != 15) {
-            Toast.makeText(mContext, "无效的imei", Toast.LENGTH_SHORT).show();
+
+        if (!mBluetoothAdapter.isEnabled() && enable) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            ((Activity) mContext).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             return;
         }
+
+        if (!TextUtils.isEmpty(mConnectBleName) && mConnectBleName.equals(imei)) {
+            if (mBluetoothLeService != null && mBluetoothLeService.connect(mDeviceAddress)) {
+                return;
+            } else if (mBluetoothLeService != null){
+                quit();
+            }
+        }
+
         final SerialPortScanCallBack scanCallback = new SerialPortScanCallBack(this, imei);
         if (enable) {
             mHandler.postDelayed(new Runnable() {
@@ -140,7 +172,6 @@ public class BluetoothHolder {
         return mScanning;
     }
 
-
     private static class SerialPortScanCallBack implements BluetoothAdapter.LeScanCallback {
         private String mAimImei;
         private WeakReference<BluetoothHolder> holderRef;
@@ -158,6 +189,7 @@ public class BluetoothHolder {
                 }
                 BluetoothHolder holder = holderRef.get();
                 holder.mDeviceAddress = device.getAddress();
+                holder.mConnectBleName = device.getName();
                 Intent gattServiceIntent = new Intent(holder.mContext, BluetoothLeService.class);
                 holder.mContext.bindService(gattServiceIntent, holder.mServiceConnection, Context.BIND_AUTO_CREATE);
 

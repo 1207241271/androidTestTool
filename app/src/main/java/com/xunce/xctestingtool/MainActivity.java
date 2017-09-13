@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.xunce.bluetoothgatt.BluetoothHolder;
 import com.xunce.bluetoothgatt.BluetoothLeService;
 import com.xunce.xctestingtool.databinding.ActivityMainBinding;
+import com.xunce.xctestingtool.utils.KeyBoardUtils;
 
 public class MainActivity extends AppCompatActivity implements  MainContract.View{
     private static final int  Manguo = 1;
@@ -194,7 +195,11 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
 
     @Override
     public void setIMEI(String IMEI) {
+        KeyBoardUtils.hideSoftKeyboard(this);
         mBinding.txtIMEI.setText("IMEI:"+IMEI);
+        if (mBluetoothHolder != null) {
+            mBluetoothHolder.scanDeviceAndConnect(IMEI, true);
+        }
     }
 
     @Override

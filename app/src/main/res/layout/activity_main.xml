@@ -293,7 +293,7 @@
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:text="START"
-            android:onClick='@{()->presenter.wirteCmd("{\"c\":1, \"param\":{\"defend\":1}}")}'
+            android:onClick='@{()->presenter.wirteCmd("{\"c\":1, \"param\":{\"defend\":0}}")}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -306,7 +306,7 @@
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:text="STOP"
-            android:onClick='@{()->presenter.wirteCmd("{\"c\":1, \"param\":{\"defend\":0}}")}'
+            android:onClick='@{()->presenter.wirteCmd("{\"c\":1, \"param\":{\"defend\":1}}")}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginBottom="105dp"
