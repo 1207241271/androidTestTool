@@ -1,7 +1,6 @@
 package com.xunce.xctestingtool;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -115,6 +114,13 @@ public class MainPresenter  implements MainContract.Presenter{
                 }
             }
         });
+    }
+
+    @Override
+    public void wirteCmd(String cmd) {
+        if (mainView != null) {
+            ((MainActivity) mainView).wirteCmd(cmd);
+        }
     }
 
     @Override

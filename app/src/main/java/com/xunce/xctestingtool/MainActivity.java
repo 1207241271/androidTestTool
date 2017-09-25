@@ -1,30 +1,74 @@
 package com.xunce.xctestingtool;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
+import com.xunce.bluetoothgatt.BluetoothHolder;
+import com.xunce.bluetoothgatt.BluetoothLeService;
 import com.xunce.xctestingtool.databinding.ActivityMainBinding;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import com.xunce.xctestingtool.utils.KeyBoardUtils;
 
 public class MainActivity extends AppCompatActivity implements  MainContract.View{
     private static final int  Manguo = 1;
     private static final int  Xiaomi = 2;
     private ActivityMainBinding mBinding;
     private MainContract.Presenter mPresenter;
+    private boolean mConnected = false;
+    private BluetoothHolder mBluetoothHolder;
+
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                Log.d("BLE", "connected !!!!");
+                mConnected = true;
+                if (mBinding != null) {
+                    mBinding.cmd1.setVisibility(View.VISIBLE);
+                    mBinding.cmd2.setVisibility(View.VISIBLE);
+                    mBinding.cmd3.setVisibility(View.VISIBLE);
+                }
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                mConnected = false;
+                Log.d("BLE", "disconnected !!!!");
+                if (mBinding != null) {
+                    mBinding.cmd1.setVisibility(View.INVISIBLE);
+                    mBinding.cmd2.setVisibility(View.INVISIBLE);
+                    mBinding.cmd3.setVisibility(View.INVISIBLE);
+                }
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                // Show all the supported services and characteristics on the user interface.
+                Log.d("BLE", "discovered !!!!");
+
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                String data = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                Log.d("BLE", "read data : " + data);
+                if (mBinding != null) {
+                    String appendRet = mBinding.txtResult.getText().toString();
+                    mBinding.txtResult.setText(appendRet + data);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBluetoothHolder = new BluetoothHolder();
+        mBluetoothHolder.init(this);
         bindData();
         initView();
     }
@@ -33,6 +77,32 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothHolder != null) {
+            mBluetoothHolder.registerCallBack();
+        }
+    }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mGattUpdateReceiver);
+        if (mBluetoothHolder != null) {
+            mBluetoothHolder.unregisterCallBack();
+        }
+    }
 
     private void showChooseDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -57,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.unSubscribe();
+        if (mBluetoothHolder != null) {
+            mBluetoothHolder.quit();
+        }
     }
 
 
@@ -68,13 +141,65 @@ public class MainActivity extends AppCompatActivity implements  MainContract.Vie
         showChooseDialog();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            return true;
+        }
+        getMenuInflater().inflate(R.menu.main, menu);
+        if (mBluetoothHolder != null && !mBluetoothHolder.isScaning()) {
+            menu.findItem(R.id.menu_stop).setVisible(false);
+            menu.findItem(R.id.menu_scan).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_stop).setVisible(true);
+            menu.findItem(R.id.menu_scan).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_scan:
+                if (mBluetoothHolder != null) {
+                    mBluetoothHolder.scanDeviceAndConnect(mBinding.editImei.getText().toString(), true);
+                }
+                break;
+            case R.id.menu_stop:
+                if (mBluetoothHolder != null) {
+                    mBluetoothHolder.scanDeviceAndConnect(mBinding.editImei.getText().toString(), false);
+                }
+                break;
+        }
+        return true;
+    }
+
+    public void wirteCmd(final String cmd) {
+        if (mBluetoothHolder == null) {
+            return;
+        }
+        if (mBinding != null) {
+            mBinding.txtResult.setText("");
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mBluetoothHolder.writeCmd(cmd);
+            }
+        }).start();
+    }
+
     public void setPresenter(MainContract.Presenter presenter){
         mPresenter = presenter;
     }
 
     @Override
     public void setIMEI(String IMEI) {
+        KeyBoardUtils.hideSoftKeyboard(this);
         mBinding.txtIMEI.setText("IMEI:"+IMEI);
+        if (mBluetoothHolder != null) {
+            mBluetoothHolder.scanDeviceAndConnect(IMEI, true);
+        }
     }
 
     @Override
