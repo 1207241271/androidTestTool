@@ -35,6 +35,7 @@ public interface MainContract {
         void getAllInfo();
         void closeDevice();
         void checkSuccess();
+        void xiaomiToxiaoAn();
         void checkType();
         void update();
         void setCheckType(Integer type);

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.xunce.xctestingtool.utils.StreamToStringUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,6 +70,41 @@ public class HttpRequest {
             }
         }).start();
     }
+    public static void deleteHttpResult(final String url,  final String body,final HttpCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection connection;
+                try {
+                    URL getURL = new URL(url);
+                    connection = (HttpURLConnection) getURL.openConnection();
+                    connection.setDoInput(true);
+                    connection.setRequestMethod("DELETE");
+                    connection.setConnectTimeout(5000);
+                    connection.setUseCaches(false);        //设置不进行缓存
+                    connection.setInstanceFollowRedirects(true);
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    if (body != null) {
+                        byte[] bytes = body.getBytes();
+                        OutputStream os = connection.getOutputStream();
+                        os.write(bytes);
+                        os.flush();
+                        os.close();
+                    }
+                    int response = connection.getResponseCode();
+                    if (response == HttpURLConnection.HTTP_OK){
+                        String result = StreamToStringUtil.StreamToString(connection.getInputStream());
+                        callback.httpCallBack(result);
+                    }else {
+                        connection.disconnect();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
 
     public static String getStringWithCmd(int cmd,String IMEI){

@@ -32,6 +32,7 @@
             android:layout_height="50dp"
             android:id="@+id/gotoScanner"
             android:text="二维码扫描"
+            android:background="@drawable/button_selector"
             android:onClick="@{() -> presenter.gotoScanner()}"
             android:layout_marginRight="20dp"
             app:layout_constraintRight_toRightOf="parent"
@@ -67,6 +68,7 @@
             android:id="@+id/btn_imei"
             android:onClick="@{()->presenter.setIMEI(editImei.getText().toString())}"
             android:text="查询"
+            android:background="@drawable/button_selector"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gotoScanner"/>
 
@@ -90,6 +92,7 @@
             android:id="@+id/btn_play_alarm"
             android:onClick="@{()->presenter.playAlarm()}"
             android:text="播放"
+            android:background="@drawable/button_selector"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_imei"/>
 
@@ -112,6 +115,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_close_acc"
             android:text="关闭"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.closeAcc()}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_play_alarm"/>
@@ -123,6 +127,7 @@
             android:layout_marginRight="20dp"
             android:text="开启"
             android:id="@+id/btn_open_acc"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.openAcc()}"
             app:layout_constraintRight_toLeftOf="@+id/btn_close_acc"
             app:layout_constraintBottom_toBottomOf="@+id/btn_close_acc" />
@@ -146,6 +151,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_close_fence"
             android:text="关闭"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.closeFence()}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_close_acc"/>
@@ -157,7 +163,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_open_fence"
             android:text="开启"
-            android:background="@color/colorAccent"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.setFence()}"
             app:layout_constraintRight_toLeftOf="@+id/btn_close_fence"
             app:layout_constraintTop_toBottomOf="@+id/btn_close_acc"/>
@@ -180,6 +186,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_close_backWheel"
             android:text="关闭"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.closeBackWheel()}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_close_fence"/>
@@ -191,6 +198,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_open_backWheel"
             android:text="开启"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.openBackWheel()}"
             app:layout_constraintRight_toLeftOf="@+id/btn_close_backWheel"
             app:layout_constraintTop_toBottomOf="@+id/btn_close_fence"/>
@@ -214,7 +222,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_open_backSeat"
             android:text="开启"
-            android:background="@color/colorAccent"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.openBackSeat()}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_open_backWheel"/>
@@ -237,6 +245,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/btn_get_info"
             android:text="获取"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.getAllInfo()}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_open_backSeat"/>
@@ -246,7 +255,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_vol"
             android:text="电压：--"
-            android:background="@color/colorAccent"
             android:layout_marginLeft="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_get_info"/>
@@ -281,6 +289,7 @@
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:text="GET"
+            android:background="@drawable/button_selector"
             android:onClick='@{()->presenter.wirteCmd("{\"c\":0}")}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -293,6 +302,7 @@
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:text="START"
+            android:background="@drawable/button_selector"
             android:onClick='@{()->presenter.wirteCmd("{\"c\":1, \"param\":{\"defend\":0}}")}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -306,6 +316,7 @@
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:text="STOP"
+            android:background="@drawable/button_selector"
             android:onClick='@{()->presenter.wirteCmd("{\"c\":1, \"param\":{\"defend\":1}}")}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -317,7 +328,7 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:text="关闭设备"
-            android:background="@color/colorAccent"
+            android:background="@drawable/button_selector"
             android:onClick="@{()->presenter.closeDevice()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -328,6 +339,7 @@
             android:layout_height="40dp"
             android:id="@+id/checkedOK"
             android:text="升级"
+            android:background="@drawable/button_selector"
             android:onClick="@{() -> presenter.update()}"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="60dp"
@@ -337,6 +349,7 @@
             android:layout_height="40dp"
             android:id="@+id/checkedFail"
             android:text="检测合格"
+            android:background="@drawable/button_selector"
             android:onClick="@{() -> presenter.checkSuccess()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -352,6 +365,13 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_back"
+            android:text="小蜜回退"
+            android:onClick="@{() -> presenter.xiaomiToxiaoAn()}"
+            app:layout_constraintBottom_toBottomOf="@id/constraintLayout"/>
     </android.support.constraint.ConstraintLayout>
 
 

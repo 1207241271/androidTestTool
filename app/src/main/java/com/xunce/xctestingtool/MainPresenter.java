@@ -322,6 +322,7 @@ public class MainPresenter  implements MainContract.Presenter{
         });
     }
 
+
     @Override
     public void update() {
         HttpRequest.postHttpCmdResult(url, HttpRequest.getStringWithCmd(35, this.IMEI), new HttpCallback() {
@@ -336,7 +337,7 @@ public class MainPresenter  implements MainContract.Presenter{
 
     @Override
     public void checkSuccess() {
-        JSONObject object = new JSONObject();
+        final JSONObject object = new JSONObject();
         try{
             object.put("imei",IMEI);
             object.put("type",type);
@@ -346,9 +347,68 @@ public class MainPresenter  implements MainContract.Presenter{
         HttpRequest.postHttpCmdResult(typeUrl+"qcAddImei", object.toString(), new HttpCallback() {
             @Override
             public void httpCallBack(String result) {
-                isSuc(result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.has("code") && jsonObject.getInt("code") == 0) {
+                        HttpRequest.postHttpCmdResult(typeUrl + "qcVerifyImei", object.toString(), new HttpCallback() {
+                            @Override
+                            public void httpCallBack(String result) {
+                                isSuc(result);
+                            }
+                        });
+                    } else {
+                        mainView.showToast("查询失败");
+                    };
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
+    }
+
+    @Override
+    public void xiaomiToxiaoAn() {
+        final JSONObject object = new JSONObject();
+        final JSONObject deleteObject = new JSONObject();
+        try {
+            object.put("carId",IMEI);
+            object.put("url","mangguo.xiaoantech.com:9880");
+            object.put("user","xatech");
+            deleteObject.put("imei",IMEI);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        HttpRequest.deleteHttpResult(typeUrl+"qcAddImei/"+IMEI,null, new HttpCallback() {
+            @Override
+            public void httpCallBack(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.has("code") && jsonObject.getInt("code") == 0) {
+                        HttpRequest.postHttpCmdResult("http://123.57.173.14:58787/exchange/sss", object.toString(), new HttpCallback() {
+                            @Override
+                            public void httpCallBack(String result) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(result);
+                                    if (jsonObject.has("rtCode") && jsonObject.getInt("rtCode") == 0) {
+                                        mainView.showToast("退回小安服务器成功");
+                                    } else if (jsonObject.getInt("rtCode") == 3){
+                                        mainView.showToast("设备离线");
+                                    };
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    } else {
+                        mainView.showToast("服务器删除记录失败");
+                    };
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     private boolean isSuc(String result){
